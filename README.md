@@ -9,9 +9,7 @@ pip install -r requirements.txt
 
 ### Install pipreqs:
     Run: 
-    ```
     pip install pipreqs
-    ```
 
 ### To Update requirements.txt:
     Run(in directory that contains main.py):
