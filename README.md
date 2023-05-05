@@ -11,5 +11,5 @@ To Start API run(in directory that contains main.py): uvicorn main:app --reload
     pip install pipreqs
 
 ### To Update requirements.txt:
+    python -m  pipreqs.pipreqs .
 Run(in directory that contains main.py):
-     python -m  pipreqs.pipreqs .
