@@ -1,5 +1,5 @@
 # ECE547_Steg
-##Final Project for ECE 547 at UMass Amherst
+## Final Project for ECE 547 at UMass Amherst
 To Start API run(in directory that contains main.py): uvicorn main:app --reload
 
 ### To install Nessasary Libraries:
