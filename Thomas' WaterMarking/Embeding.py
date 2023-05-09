@@ -42,6 +42,7 @@ def embed(imagePath,message,qf = 85):
             #LOSSY division by Q matrix (elemtwise)
             for i in range(8):
                 for j in range(8):
+                    #ENCODE DATA HERE
                     lossyImg[i][j] = int(dctImgSeq[i][j]/Q[i][j])
             # print(lossyImg)
             imgDCTZZ = zigzag(lossyImg)
