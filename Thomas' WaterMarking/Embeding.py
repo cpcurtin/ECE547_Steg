@@ -55,6 +55,7 @@ def embed(imagePath,message,qf = 85):
                         dEnd = 64 - b 
             if(63-dEnd)>=30:
                 for i in range(7):
+                    #POS = n+m mod l
                     count = count + 1
                     imgDCTZZ[dEnd+i] = random.randint(0,1)
 
