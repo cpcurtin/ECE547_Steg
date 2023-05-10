@@ -7,8 +7,10 @@ from zigzag import *
 from inverse_zigzag import *
 from PIL import Image as im
 import random
+from MessageData import *
 
 def embed(imagePath,message,qf = 85):
+    messageBank,mLen = generateMessageBank(message)
     count = 0
     count2 = 0
     #Get Image and convert it to YUV format
@@ -57,7 +59,13 @@ def embed(imagePath,message,qf = 85):
                 for i in range(7):
                     #POS = n+m mod l
                     count = count + 1
-                    imgDCTZZ[dEnd+i] = random.randint(0,1)
+                    #TODO Change the data type of the items in imgDCTZZ and messageBank
+                    #Want to change the "2" to maybe 1.5? (next 2 line)
+                    #1 is exactly the cutoff and the JPEG compression is loosing to much data
+                    #2 is not bad but the larger the number the more distortion we introduce
+                    #This is what we can change durring testing if we are loosing to much data
+                    imgDCTZZ[dEnd+i] = messageBank[(n+m)%mLen][0,i]*2
+                imgDCTZZ[dEnd+7] = 2
 
 
             imgEncDct = inverse_zigzag(imgDCTZZ)
@@ -69,10 +77,8 @@ def embed(imagePath,message,qf = 85):
             for d in range(8):
                 for c in range(8):
                     if(imEncSub[d][c] >= 255):
-                        count2=count2+1
                         imEncSub[d][c] = 255
                     if(imEncSub[d][c] < 0):
-                        count2=count2+1
                         imEncSub[d][c] = 0
             EncodedImage[8*n:8*n+8, 8*m:8*m+8, 0] = imEncSub
             EncodedImage[8*n:8*n+8, 8*m:8*m+8, 1] = imgf[8*n:8*n+8, 8*m:8*m+8, 1]
