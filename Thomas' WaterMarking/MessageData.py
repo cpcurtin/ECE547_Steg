@@ -34,9 +34,14 @@ if __name__ == '__main__':
     # a,b=generateMessageBank("BYE")
     # l = [0, 0, 0, 1, 1, 0, 1]
     # verify(l)
-    mH = ['f', 'f', '5', '4', '6', '8', '6', 'f', '6', 'd', '6', '1', '7', '3']
-    m = ''.join(mH[2:])
-    n = bytearray.fromhex(m).decode('utf-8')
-    print(n)
-    # decode('utf-8')
+    list = ['0', '6', '1', '2', '0', '7', '7', 'f', 'f', '7', '4', '6', '5', '7']
+    n = len(list)
+    for i in range(len(list)):
+        if(list[i] == 'f'):
+            if(list[i+1] == 'f'):
+                start = i
+                break
+    list = list[start+2:n] + list[0:start]
+    print(start)
+            
 
