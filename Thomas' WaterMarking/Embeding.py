@@ -15,6 +15,9 @@ def embed(imagePath,message,qf = 85):
     count2 = 0
     #Get Image and convert it to YUV format
     img = cv.imread(imagePath)
+    if(type(img) != np.ndarray):
+        print("Image Not Found")
+        return False
     imgyuv = cv.cvtColor(img, cv.COLOR_RGB2YUV)
     imgf = imgyuv.astype('float32')
 
@@ -55,7 +58,7 @@ def embed(imagePath,message,qf = 85):
                 if(dEnd == 64):
                     if(imgDCTZZ[63-b] != 0):
                         dEnd = 64 - b 
-            if(63-dEnd)>=30:
+            if(63-dEnd)>=10:
                 for i in range(7):
                     #POS = n+m mod l
                     count = count + 1
@@ -96,7 +99,7 @@ def embed(imagePath,message,qf = 85):
     filename = cwd+"\Thomas' WaterMarking\Images\EncodedImage.jpg"
     cv.imwrite(filename,wmrgb,[int(cv.IMWRITE_JPEG_QUALITY), qf])
     filename = cwd+"\Thomas' WaterMarking\Images\EncodedImageEDITED.jpg"
-    cv.imwrite(filename,wmblocks,[int(cv.IMWRITE_JPEG_QUALITY), qf])
+    #cv.imwrite(filename,wmblocks,[int(cv.IMWRITE_JPEG_QUALITY), qf])
     print(count)
     print(count2)
 
@@ -106,4 +109,4 @@ def embed(imagePath,message,qf = 85):
 if __name__ == '__main__':
     # print(generateQMatrix(80))
     cwd = os.getcwd()
-    embed(cwd+"\Thomas' WaterMarking\Images\CrowGSM.jpg","Thomas' Image")
+    embed("C:\DevCode\ECE547_Steg\Thomas' WaterMarking\Images\GSM_TE.jpg","This is a watermarked Image")

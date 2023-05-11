@@ -7,7 +7,8 @@ H = np.matrix('1 0 1; 1 1 0 ; 1 1 1; 0 1 1; 1 0 0 ; 0 1 0; 0 0 1',dtype=int).tra
 def generateMessageBank(m):
     ba = bitarray.bitarray()
     ba.frombytes(m.encode('utf-8'))
-    l = ba.tolist()
+    temp = ba.tolist()
+    l = [1,1,1,1,1,1,1,1]+temp
     # Convert Back
     # bitarray.bitarray(l)
     # bitarray.bitarray(l).tobytes().decode('utf-8')
@@ -30,6 +31,12 @@ def verify(l):
     return (s[0,0] == 0) & (s[1,0] == 0) & (s[2,0] == 0)
 
 if __name__ == '__main__':
-    a,b=generateMessageBank("BYE")
-    l = [0, 0, 0, 1, 1, 0, 1]
-    verify(l)
+    # a,b=generateMessageBank("BYE")
+    # l = [0, 0, 0, 1, 1, 0, 1]
+    # verify(l)
+    mH = ['f', 'f', '5', '4', '6', '8', '6', 'f', '6', 'd', '6', '1', '7', '3']
+    m = ''.join(mH[2:])
+    n = bytearray.fromhex(m).decode('utf-8')
+    print(n)
+    # decode('utf-8')
+
