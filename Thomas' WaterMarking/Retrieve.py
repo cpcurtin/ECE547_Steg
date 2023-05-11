@@ -151,7 +151,8 @@ def Retrieve(imagePath,qf = 85):
     min1 = min(dataStart)
     dataStart2 = [i for i in dataStart if i != min1]
     min2 = min(dataStart2)
-    Length = min2 - min1   
+    Length = min2 - min1
+    Length = 56   
     #NEED TO IMPROVE THIS pick the most optimal Length that works for the dataStart array
     messDist = [dict() for x in range(Length)]
     for n2 in range(rowNum):
@@ -166,8 +167,16 @@ def Retrieve(imagePath,qf = 85):
     for dictI in range(Length):
         diction = messDist[dictI]
         correctData += max(diction.values())
-        messHex[dictI]=max(diction, key=diction.get)       
-    messHex2 = ''.join(messHex[2:])
+        messHex[dictI]=max(diction, key=diction.get)
+    start = 0
+    for s in range(Length):
+        if(messHex[s] == 'f'):
+            if(messHex[s+1] == 'f'):
+                start = s
+                break
+    messHex = messHex[start+2:Length] + messHex[0:start]
+    print(start)       
+    messHex2 = ''.join(messHex[:])
     encodedMessage = bytearray.fromhex(messHex2).decode('utf-8')
     totalData = wrongData + retrevedData
     lostData = totalData - correctData
