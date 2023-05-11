@@ -11,7 +11,9 @@ from MessageData import *
 
 def Retrieve(imagePath,qf = 85):
     wrongData = 0
+    retrevedData = 0
     correctData = 0
+
     #Get Image and convert it to YUV format
     img = cv.imread(imagePath)
     if(type(img) != np.ndarray):
@@ -37,10 +39,54 @@ def Retrieve(imagePath,qf = 85):
     #For each 8 by 8 section
     EncodedImage = np.zeros(imgf.shape,int)
     DataMatrix = np.zeros((rowNum,colNum),str)
-    for n in range(rowNum):
-        for m in range(colNum):
+    nOff = 0
+    mOff = 0
+    nPoint = []
+    mPoint = []
+    nPcount = 20
+    offSet = False
+    for i in range(nPcount):
+        nPoint.append(random.randint(0,rowNum))
+        mPoint.append(random.randint(0,colNum))
+    for n0 in range(8):
+        for m0 in range(8):
+            if(not offSet):
+                dataSucess = 0
+                for i in range(nPcount):
+                    dctSample0 = cv.dct(imgf[8*nPoint[i]+n0:8*nPoint[i]+8+n0, 8*mPoint[i]+m0:8*mPoint[i]+8+m0, 0])
+                    lossyImg0 = np.zeros((8,8),dtype=int)
+                    for i in range(8):
+                        for j in range(8):
+                            lossyImg0[i][j] = int(dctSample0[i][j]/Q[i][j])
+                    imgDCTZZ0 = zigzag(lossyImg0)
+                    dEnd0 = 64
+                    for b in range(64):
+                        if(dEnd0 == 64):
+                            if(imgDCTZZ0[63-b] != 0):
+                                dEnd0 = 64 - b 
+                    l0 = []
+                    if dEnd0 > 8:
+                        for i in imgDCTZZ0[dEnd0 - 8:dEnd0-1]:
+                            if(i>0):
+                                l0.append(1)
+                            else:
+                                l0.append(0)
+                        if verify(l0):
+                            datHex0 = hex(int(''.join(str(e) for e in l0[0:4]),2))
+                            if(datHex0 != '0x0'):
+                                dataSucess += 1
+                if(dataSucess > 4):
+                    nOff = n0
+                    mOff = m0
+                    offSet = True
+                    break
+    if(not offSet):
+        print("COUNT NOT FIND ENOUGH DATA Try again")
+        return False           
+    for n in range(rowNum-1):
+        for m in range(colNum-1):
             #Compute DCT
-            start = imgf[8*n:8*n+8, 8*m:8*m+8, 0]
+            start = imgf[8*n+nOff:8*n+8+nOff, 8*m+mOff:8*m+8+mOff, 0]
             dctImgSeq = cv.dct(start)
             lossyImg = np.zeros((8,8),dtype=int)
             # print(dctImgSeq)
@@ -85,13 +131,13 @@ def Retrieve(imagePath,qf = 85):
                     #somehow keep track of when we cant retreve the data in a sequence.
                     #the data (should be) organized so going right or down will give the next data point
                     #idk if this will help
-                    correctData = correctData + 1
+                    retrevedData = retrevedData + 1
                     datHex = hex(int(''.join(str(e) for e in l[0:4]),2))
                     DataMatrix[n,m] = datHex[2]
                 else:
                     wrongData = wrongData + 1
                 #
-    if(correctData < 50):
+    if(retrevedData < 50):
         print("Not Enough Data")
         return False
     dataStart = []
@@ -103,8 +149,8 @@ def Retrieve(imagePath,qf = 85):
         print("No Message Detected")
         return False
     min1 = min(dataStart)
-    dataStart.remove(min1)
-    min2 = min(dataStart)
+    dataStart2 = [i for i in dataStart if i != min1]
+    min2 = min(dataStart2)
     Length = min2 - min1   
     #NEED TO IMPROVE THIS pick the most optimal Length that works for the dataStart array
     messDist = [dict() for x in range(Length)]
@@ -119,13 +165,15 @@ def Retrieve(imagePath,qf = 85):
     messHex = [''] * Length
     for dictI in range(Length):
         diction = messDist[dictI]
+        correctData += max(diction.values())
         messHex[dictI]=max(diction, key=diction.get)       
     messHex2 = ''.join(messHex[2:])
     encodedMessage = bytearray.fromhex(messHex2).decode('utf-8')
-
-    print("Number of corupted 8x8 cells: "+str(wrongData))
+    totalData = wrongData + retrevedData
+    lostData = totalData - correctData
+    print("Number of corupted 8x8 cells: "+str(lostData))
     print("Number of correct 8x8 cells: "+str(correctData))
-    rate = 100*correctData/(correctData+wrongData)
+    rate = 100*correctData/totalData
     print("rate of correct data: "+str(rate)+"%")
     #Data Rate of ~99%
     return encodedMessage
