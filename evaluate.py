@@ -28,6 +28,6 @@ def main():
 
 if __name__ == '__main__':
 	cwd = os.getcwd()
-	imgEnc = cwd+"\Thomas' WaterMarking\Images\EncodedImage.jpg"
-	img = cwd+"\Thomas' WaterMarking\Images\GSM_TE.jpg"
-	psnr(img,imgEnc)
+	# imgEnc = cwd+"\Thomas' WaterMarking\Images\EncodedImage.jpg"
+	# img = cwd+"\Thomas' WaterMarking\Images\GSM_TE.jpg"
+	# psnr(img,imgEnc)

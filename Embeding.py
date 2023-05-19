@@ -22,9 +22,9 @@ def embed(imagePath,message,qf = 85,outname="EncodedImage"):
     imgf = imgyuv.astype('float32')
 
     cwd = os.getcwd()
-    filename0 = cwd+"\Thomas' WaterMarking\Images\ConvertedToJpg.jpg"
-    imgTem0 = cv.cvtColor(imgf.astype('uint8'), cv.COLOR_YUV2RGB)
-    cv.imwrite(filename0,imgTem0,[int(cv.IMWRITE_JPEG_QUALITY), qf])
+    # filename0 = cwd+"\Images\ConvertedToJpg.jpg"
+    # imgTem0 = cv.cvtColor(imgf.astype('uint8'), cv.COLOR_YUV2RGB)
+    # cv.imwrite(filename0,imgTem0,[int(cv.IMWRITE_JPEG_QUALITY), qf])
 
     #Convert image to numpy array
     # imgArray = np.asarray(imgf)    
@@ -87,9 +87,8 @@ def embed(imagePath,message,qf = 85,outname="EncodedImage"):
             #print(imgDCTZZ)
     wmrgb = cv.cvtColor(EncodedImage.astype('uint8'), cv.COLOR_YUV2RGB)
     
-    filename = cwd+"\Thomas' WaterMarking\EncodedImages\{0}.jpg".format(outname)
+    filename = cwd+"\EncodedImages\{0}.jpg".format(outname)
     cv.imwrite(filename,wmrgb,[int(cv.IMWRITE_JPEG_QUALITY), qf])
-    filename = cwd+"\Thomas' WaterMarking\Images\EncodedImageEDITED.jpg"
     #cv.imwrite(filename,wmblocks,[int(cv.IMWRITE_JPEG_QUALITY), qf])
     print(count)
     print(count2)
@@ -100,4 +99,5 @@ def embed(imagePath,message,qf = 85,outname="EncodedImage"):
 if __name__ == '__main__':
     # print(generateQMatrix(80))
     cwd = os.getcwd()
-    embed("C:\DevCode\ECE547_Steg\Thomas' WaterMarking\Images\GSM_TE.jpg","This is a watermarked Image")
+    #File Path Wrong need to be fixed if used
+    #embed("C:\DevCode\ECE547_Steg\Images\GSM_TE.jpg","This is a watermarked Image")

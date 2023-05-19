@@ -193,5 +193,5 @@ def Retrieve(imagePath,qf = 85):
 if __name__ == '__main__':
     # print(generateQMatrix(80))
     cwd = os.getcwd()
-    mess = Retrieve(cwd+"\Thomas' WaterMarking\Images\EncodedImage.jpg")
+    mess = Retrieve(cwd+"\EncodedImages\CrowGSME.jpg")
     print("Water marked Message: "+str(mess))

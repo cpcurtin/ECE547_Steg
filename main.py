@@ -1,27 +1,28 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from Embeding import *
+from evaluate import *
+import os 
+import pandas as pd
+import openpyxl
 
-app = FastAPI()
-
-origins = [
-    "http://localhost:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World This is Water Marking Backend"}
-
-
-# PSNR is an integrated function in tensorflow. https://www.tensorflow.org/api_docs/python/tf/image/psnr
-# MSE is integrated in both numpy and scikit-learn. https://www.geeksforgeeks.org/python-mean-squared-error/#
-# Assuming there are no issues importing these modules with our website, we should just use them because they are already defined. Tensorflow specifically 
-#   demos using PSNR on image files in the documentation linked above. 
-# There are also functions for jpeg rescaling and other image manipulation. https://www.tensorflow.org/api_docs/python/tf/image
+skipEncode = False
+message = "@tgreelz"
+cwd = os.getcwd()
+imageNames = os.listdir(cwd+"\ImageToEncode")
+if(not skipEncode):
+    for image in imageNames:
+        print("Started Embeding: "+image)
+        embed("{0}\ImageToEncode\{1}".format(cwd,image),message,85,image[0:-4]+"E")
+        print("Finished embeding "+image)
+    print("All Embeding Finished")
+psnrD = []
+mseD = []
+for imageEval in imageNames:
+    original = "{0}\ImageToEncode\{1}".format(cwd,imageEval)
+    encoded = "{0}\EncodedImages\{1}.jpg".format(cwd,imageEval[0:-4]+"E")
+    print("Image Name: "+imageEval)
+    psnrO , mseO = psnr(original, encoded)
+    psnrD.append(psnrO)
+    mseD.append(mseO)
+d = {'PSNR': psnrD, 'MSE': mseD}
+df = pd.DataFrame(data=d)
+df.to_excel('DataPSNR.xlsx', sheet_name='PSNR')
