@@ -14,7 +14,7 @@ def psnr(src, dst):
 	psnr = 20*math.log10(255/sqrtmse)
 	print("PSNR: "+str(psnr))
 	print("MSE: "+str(mse))
-	return psnr
+	return psnr, mse
 
 
 def main():

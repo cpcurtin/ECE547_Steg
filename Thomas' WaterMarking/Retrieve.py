@@ -43,17 +43,18 @@ def Retrieve(imagePath,qf = 85):
     mOff = 0
     nPoint = []
     mPoint = []
-    nPcount = 20
+    nPcount = 50
     offSet = False
     for i in range(nPcount):
-        nPoint.append(random.randint(0,rowNum))
-        mPoint.append(random.randint(0,colNum))
+        nPoint.append(random.randint(0,rowNum-8))
+        mPoint.append(random.randint(0,colNum-8))
     for n0 in range(8):
         for m0 in range(8):
             if(not offSet):
                 dataSucess = 0
                 for i in range(nPcount):
-                    dctSample0 = cv.dct(imgf[8*nPoint[i]+n0:8*nPoint[i]+8+n0, 8*mPoint[i]+m0:8*mPoint[i]+8+m0, 0])
+                    start = imgf[8*nPoint[i]+n0:8*nPoint[i]+8+n0, 8*mPoint[i]+m0:8*mPoint[i]+8+m0, 0]
+                    dctSample0 = cv.dct(start)
                     lossyImg0 = np.zeros((8,8),dtype=int)
                     for i in range(8):
                         for j in range(8):
@@ -174,8 +175,7 @@ def Retrieve(imagePath,qf = 85):
             if(messHex[s+1] == 'f'):
                 start = s
                 break
-    messHex = messHex[start+2:Length] + messHex[0:start]
-    print(start)       
+    messHex = messHex[start+2:Length] + messHex[0:start]      
     messHex2 = ''.join(messHex[:])
     encodedMessage = bytearray.fromhex(messHex2).decode('utf-8')
     totalData = wrongData + retrevedData
@@ -193,5 +193,5 @@ def Retrieve(imagePath,qf = 85):
 if __name__ == '__main__':
     # print(generateQMatrix(80))
     cwd = os.getcwd()
-    mess = Retrieve(cwd+"\Thomas' WaterMarking\Images\TwitterEncodedDownload.jpg")
+    mess = Retrieve(cwd+"\Thomas' WaterMarking\Images\EncodedImage.jpg")
     print("Water marked Message: "+str(mess))
