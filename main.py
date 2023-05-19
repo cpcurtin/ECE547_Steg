@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import openpyxl
 
-skipEncode = False
+skipEncode = True
 message = "@tgreelz"
 cwd = os.getcwd()
 imageNames = os.listdir(cwd+"\ImageToEncode")
@@ -23,6 +23,6 @@ for imageEval in imageNames:
     psnrO , mseO = psnr(original, encoded)
     psnrD.append(psnrO)
     mseD.append(mseO)
-d = {'PSNR': psnrD, 'MSE': mseD}
+d = {'File Name':imageNames, 'PSNR': psnrD, 'MSE': mseD}
 df = pd.DataFrame(data=d)
 df.to_excel('DataPSNR.xlsx', sheet_name='PSNR')
