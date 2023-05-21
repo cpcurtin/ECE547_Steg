@@ -18,7 +18,7 @@ def Retrieve(imagePath,qf = 85):
     img = cv.imread(imagePath)
     if(type(img) != np.ndarray):
         print("Image Not Found")
-        return False
+        return False, 0
     imgyuv = cv.cvtColor(img, cv.COLOR_RGB2YUV)
     imgf = imgyuv.astype('float32')
 
@@ -43,7 +43,7 @@ def Retrieve(imagePath,qf = 85):
     mOff = 0
     nPoint = []
     mPoint = []
-    nPcount = 50
+    nPcount = 70
     offSet = False
     for i in range(nPcount):
         nPoint.append(random.randint(0,rowNum-8))
@@ -76,14 +76,14 @@ def Retrieve(imagePath,qf = 85):
                             datHex0 = hex(int(''.join(str(e) for e in l0[0:4]),2))
                             if(datHex0 != '0x0'):
                                 dataSucess += 1
-                if(dataSucess > 4):
+                if(dataSucess > 5):
                     nOff = n0
                     mOff = m0
                     offSet = True
                     break
     if(not offSet):
         print("COUNT NOT FIND ENOUGH DATA Try again")
-        return False           
+        return False, 0           
     for n in range(rowNum-1):
         for m in range(colNum-1):
             #Compute DCT
@@ -140,7 +140,7 @@ def Retrieve(imagePath,qf = 85):
                 #
     if(retrevedData < 50):
         print("Not Enough Data")
-        return False
+        return False, 0
     dataStart = []
     for n1 in range(rowNum-1):
         for m1 in range(colNum-1):
@@ -148,12 +148,14 @@ def Retrieve(imagePath,qf = 85):
                 dataStart.append(m1+n1)
     if(len(dataStart) < 2):
         print("No Message Detected")
-        return False
+        return False, 0
     min1 = min(dataStart)
     dataStart2 = [i for i in dataStart if i != min1]
     min2 = min(dataStart2)
     Length = min2 - min1
-    Length = 56   
+    if(Length%2 == 1):
+        Length += 1
+
     #NEED TO IMPROVE THIS pick the most optimal Length that works for the dataStart array
     messDist = [dict() for x in range(Length)]
     for n2 in range(rowNum):
@@ -185,7 +187,7 @@ def Retrieve(imagePath,qf = 85):
     rate = 100*correctData/totalData
     print("rate of correct data: "+str(rate)+"%")
     #Data Rate of ~99%
-    return encodedMessage
+    return encodedMessage, rate
 
 
 
@@ -193,5 +195,5 @@ def Retrieve(imagePath,qf = 85):
 if __name__ == '__main__':
     # print(generateQMatrix(80))
     cwd = os.getcwd()
-    mess = Retrieve(cwd+"\EncodedImages\CrowGSME.jpg")
+    mess = Retrieve("C:/DevCode/ECE547_Steg/EncodedImages/348245721_986276449078619_5047874430329954653_nE.jpg",75)
     print("Water marked Message: "+str(mess))

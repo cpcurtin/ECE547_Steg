@@ -56,7 +56,7 @@ def embed(imagePath,message,qf = 85,outname="EncodedImage"):
                 if(dEnd == 64):
                     if(imgDCTZZ[63-b] != 0):
                         dEnd = 64 - b 
-            if(63-dEnd)>=10:
+            if(63-dEnd)>=20:
                 for i in range(7):
                     #POS = n+m mod l
                     count = count + 1
@@ -100,4 +100,4 @@ if __name__ == '__main__':
     # print(generateQMatrix(80))
     cwd = os.getcwd()
     #File Path Wrong need to be fixed if used
-    #embed("C:\DevCode\ECE547_Steg\Images\GSM_TE.jpg","This is a watermarked Image")
+    embed("C:/DevCode/ECE547_Steg/EncodedImages/348245721_986276449078619_5047874430329954653_nE.jpg","@thomasGreeley451")
